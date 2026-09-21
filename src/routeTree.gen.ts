@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DatasetsRouteImport } from './routes/datasets'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as PolicySandboxRouteImport } from './routes/policy-sandbox'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DatasetsRoute = DatasetsRouteImport.update({
+  id: '/datasets',
+  path: '/datasets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PolicySandboxRoute = PolicySandboxRouteImport.update({
+  id: '/policy-sandbox',
+  path: '/policy-sandbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/datasets': typeof DatasetsRoute
+  '/library': typeof LibraryRoute
+  '/policy-sandbox': typeof PolicySandboxRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/datasets': typeof DatasetsRoute
+  '/library': typeof LibraryRoute
+  '/policy-sandbox': typeof PolicySandboxRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/datasets': typeof DatasetsRoute
+  '/library': typeof LibraryRoute
+  '/policy-sandbox': typeof PolicySandboxRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/datasets' | '/library' | '/policy-sandbox'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/datasets' | '/library' | '/policy-sandbox'
+  id: '__root__' | '/' | '/datasets' | '/library' | '/policy-sandbox'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DatasetsRoute: typeof DatasetsRoute
+  LibraryRoute: typeof LibraryRoute
+  PolicySandboxRoute: typeof PolicySandboxRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/datasets': {
+      id: '/datasets'
+      path: '/datasets'
+      fullPath: '/datasets'
+      preLoaderRoute: typeof DatasetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/policy-sandbox': {
+      id: '/policy-sandbox'
+      path: '/policy-sandbox'
+      fullPath: '/policy-sandbox'
+      preLoaderRoute: typeof PolicySandboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DatasetsRoute: DatasetsRoute,
+  LibraryRoute: LibraryRoute,
+  PolicySandboxRoute: PolicySandboxRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
