@@ -59,7 +59,7 @@ function PolicySandboxPage() {
     const titleClarity = Math.min(99, digitization + disputeReduction / 2);
     return {
       affected: affected.toLocaleString("en-IN"),
-      surplusRedistributed: surplusRedistributed.toFixed(0),
+      surplusRedistributed: Math.round(surplusRedistributed).toLocaleString("en-IN"),
       cost: formatINR(cost),
       disputeReduction: disputeReduction.toFixed(1),
       titleClarity: titleClarity.toFixed(1),
