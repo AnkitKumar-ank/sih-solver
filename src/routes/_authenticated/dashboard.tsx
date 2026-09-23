@@ -157,8 +157,8 @@ function DashboardPage() {
                         </p>
                         <p className="mt-0.5 text-[10px] text-gov-navy/40">
                           {new Date(s.created_at).toLocaleString("en-IN")} · Dispute reduction −
-                          {(s.results as Record<string, string>).disputeReduction}% · Outlay{" "}
-                          {(s.results as Record<string, string>).cost}
+                          {(s.results as Record<string, string>)["disputeReduction"]}% · Outlay{" "}
+                          {(s.results as Record<string, string>)["cost"]}
                         </p>
                       </div>
                       <button

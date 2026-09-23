@@ -8,8 +8,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>) => ({
     redirect:
-      typeof search.redirect === "string" && search.redirect.startsWith("/")
-        ? search.redirect
+      typeof search["redirect"] === "string" && search["redirect"].startsWith("/")
+        ? search["redirect"]
         : "/dashboard",
   }),
   head: () => ({
