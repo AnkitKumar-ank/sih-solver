@@ -11,6 +11,7 @@ import {
   getMyProfile,
   updateMyProfile,
 } from "@/lib/data.functions";
+import { registerDocument, processVerification } from "@/lib/verification.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -36,6 +37,8 @@ function DashboardPage() {
   const fetchProfile = useServerFn(getMyProfile);
   const saveProfile = useServerFn(updateMyProfile);
   const removeSimulation = useServerFn(deleteSimulation);
+  const registerDoc = useServerFn(registerDocument);
+  const verifyDoc = useServerFn(processVerification);
 
   const { data: simulations = [], isLoading: simsLoading } = useQuery({
     queryKey: ["my-simulations"],
