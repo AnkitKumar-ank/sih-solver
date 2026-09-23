@@ -80,6 +80,7 @@ export function SiteHeader() {
           ) : (
             <Link
               to="/auth"
+              search={{ redirect: "/dashboard" }}
               className="rounded-sm bg-gov-navy px-5 py-2 text-white transition-colors hover:bg-gov-navy/90"
             >
               Official Login
