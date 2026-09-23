@@ -76,10 +76,19 @@ function DashboardPage() {
     const { error } = await supabase.storage.from("documents").upload(path, file);
     if (error) {
       setUploadMsg(`Upload failed: ${error.message}`);
-    } else {
-      setUploadMsg("Document uploaded securely.");
-      void loadDocs();
+      return;
     }
+    try {
+      setUploadMsg("Document uploaded. Running verification…");
+      const doc = await registerDoc({
+        data: { file_name: file.name, storage_path: path, mime_type: file.type, size_bytes: file.size },
+      });
+      const r = await verifyDoc({ data: { document_id: doc.id } });
+      setUploadMsg(`Verification: ${r.verdict.replace("_", " ")} (score ${r.score}/100, ${r.risk_level} risk).`);
+    } catch (e) {
+      setUploadMsg(`Uploaded, but verification failed: ${e instanceof Error ? e.message : "error"}`);
+    }
+    void loadDocs();
   }
 
   async function handleSignOut() {
