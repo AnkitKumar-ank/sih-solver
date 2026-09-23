@@ -11,6 +11,7 @@ import {
   getMyProfile,
   updateMyProfile,
 } from "@/lib/data.functions";
+import { registerDocument, processVerification } from "@/lib/verification.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -36,6 +37,8 @@ function DashboardPage() {
   const fetchProfile = useServerFn(getMyProfile);
   const saveProfile = useServerFn(updateMyProfile);
   const removeSimulation = useServerFn(deleteSimulation);
+  const registerDoc = useServerFn(registerDocument);
+  const verifyDoc = useServerFn(processVerification);
 
   const { data: simulations = [], isLoading: simsLoading } = useQuery({
     queryKey: ["my-simulations"],
@@ -76,10 +79,19 @@ function DashboardPage() {
     const { error } = await supabase.storage.from("documents").upload(path, file);
     if (error) {
       setUploadMsg(`Upload failed: ${error.message}`);
-    } else {
-      setUploadMsg("Document uploaded securely.");
-      void loadDocs();
+      return;
     }
+    try {
+      setUploadMsg("Document uploaded. Running verification…");
+      const doc = await registerDoc({
+        data: { file_name: file.name, storage_path: path, mime_type: file.type, size_bytes: file.size },
+      });
+      const r = await verifyDoc({ data: { document_id: doc.id } });
+      setUploadMsg(`Verification: ${r.verdict.replace("_", " ")} (score ${r.score}/100, ${r.risk_level} risk).`);
+    } catch (e) {
+      setUploadMsg(`Uploaded, but verification failed: ${e instanceof Error ? e.message : "error"}`);
+    }
+    void loadDocs();
   }
 
   async function handleSignOut() {
@@ -145,8 +157,8 @@ function DashboardPage() {
                         </p>
                         <p className="mt-0.5 text-[10px] text-gov-navy/40">
                           {new Date(s.created_at).toLocaleString("en-IN")} · Dispute reduction −
-                          {(s.results as Record<string, string>).disputeReduction}% · Outlay{" "}
-                          {(s.results as Record<string, string>).cost}
+                          {(s.results as Record<string, string>)["disputeReduction"]}% · Outlay{" "}
+                          {(s.results as Record<string, string>)["cost"]}
                         </p>
                       </div>
                       <button

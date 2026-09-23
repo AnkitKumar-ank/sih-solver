@@ -50,6 +50,39 @@ export type Database = {
         }
         Relationships: []
       }
+      documents: {
+        Row: {
+          created_at: string
+          file_name: string
+          id: string
+          mime_type: string | null
+          size_bytes: number
+          status: string
+          storage_path: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          id?: string
+          mime_type?: string | null
+          size_bytes?: number
+          status?: string
+          storage_path: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          id?: string
+          mime_type?: string | null
+          size_bytes?: number
+          status?: string
+          storage_path?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       papers: {
         Row: {
           authors: string
@@ -107,6 +140,54 @@ export type Database = {
         }
         Relationships: []
       }
+      screening_reports: {
+        Row: {
+          created_at: string
+          document_id: string
+          findings: Json
+          id: string
+          recommendation: string
+          risk_level: string
+          user_id: string
+          verification_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          findings?: Json
+          id?: string
+          recommendation: string
+          risk_level: string
+          user_id: string
+          verification_id: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          findings?: Json
+          id?: string
+          recommendation?: string
+          risk_level?: string
+          user_id?: string
+          verification_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "screening_reports_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "screening_reports_verification_id_fkey"
+            columns: ["verification_id"]
+            isOneToOne: false
+            referencedRelation: "verification_results"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       simulations: {
         Row: {
           ceiling_ha: number
@@ -157,6 +238,44 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      verification_results: {
+        Row: {
+          checks: Json
+          created_at: string
+          document_id: string
+          id: string
+          score: number
+          user_id: string
+          verdict: string
+        }
+        Insert: {
+          checks?: Json
+          created_at?: string
+          document_id: string
+          id?: string
+          score: number
+          user_id: string
+          verdict: string
+        }
+        Update: {
+          checks?: Json
+          created_at?: string
+          document_id?: string
+          id?: string
+          score?: number
+          user_id?: string
+          verdict?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verification_results_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
